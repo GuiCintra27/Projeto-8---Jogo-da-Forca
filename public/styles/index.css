@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-*{
+* {
     margin: 0;
     padding: 0;
     text-decoration: none;
@@ -21,41 +21,44 @@ html {
     font-size: 62.5%;
 }
 
-img{
+img {
     height: 100%;
 }
 
-a{
+a {
     text-decoration: none;
     color: black;
 }
 
-body{
+body {
     font-family: 'Roboto', sans-serif;
     font-size: clamp(14px, 1.6rem, 2vw);
     background: var(--body-background);
 }
 
 button:hover,
-.key:hover{
+.key:hover {
     cursor: pointer;
     filter: brightness(1.04);
 }
 
-main{
+main {
     margin-inline: auto;
     padding-top: 2.5rem;
     padding-inline: 2.5rem;
     height: 70vh;
     display: flex;
     justify-content: space-between;
+    gap: 4rem;
 }
 
-#startGame{
+#startGame {
     margin-top: 4.5rem;
+    width: 30vw;
+    padding-left: 8vw;
 }
 
-#startGame > button{
+#startGame>button {
     padding: 1.5rem;
     padding-inline: 2.5rem;
     background: var(--button-start-game);
@@ -66,7 +69,30 @@ main{
     font-weight: 600;
 }
 
-#keys{
+#secretWord {
+    height: fit-content;
+    width: 100%;
+    padding-top: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+#secretWord > p{
+    font-size: 25px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 0;
+}
+
+#secretWord > .secret{
+    border-bottom: 4px solid black;
+    height: 3rem;
+    width: 3rem;
+    text-align: center;
+}
+
+#keys {
     width: 85vw;
     margin-top: 3rem;
     margin-inline: auto;
@@ -75,7 +101,7 @@ main{
     gap: 1rem;
 }
 
-.key{
+.key {
     width: 5rem;
     height: 5rem;
     border-radius: 4px;
@@ -87,17 +113,17 @@ main{
     text-transform: uppercase;
 }
 
-.disable{
+.disable {
     background-color: var(--disable-keys-bg);
     color: var(--disable-keys-key);
 }
 
-.able{
+.able {
     background-color: var(--able-keys-bg);
     color: var(--able-keys-key);
 }
 
-#guessWord{
+#guessWord {
     margin-top: 4rem;
     margin-inline: auto;
     width: fit-content;
@@ -107,11 +133,11 @@ main{
     gap: 1.25rem;
 }
 
-#guessWord > p{
+#guessWord>p {
     font-size: 17px;
 }
 
-#guessWord > input{
+#guessWord>input {
     border: 1.5px solid var(--disable-keys-key);
     border-radius: 8px;
     background-color: var(--input);
@@ -122,7 +148,7 @@ main{
     font-size: 17px;
 }
 
-#guessWord > button{
+#guessWord>button {
     padding: .8rem;
     background: var(--able-keys-bg);
     font-size: 20px;
@@ -132,22 +158,32 @@ main{
     font-weight: 600;
 }
 
-@media(min-width: 1100px){
-    main{
+@media(min-width: 1100px) {
+    main {
         width: 70vw;
     }
 
-    img{
+    img {
         height: 90%;
     }
 
-    #keys{
+    #secretWord>p {
+        font-size: 35PX;
+    }
+
+    #secretWord > .secret{
+        border-bottom: 4px solid black;
+        height: 4rem;
+        width: 5rem;
+    }
+
+    #keys {
         width: 55vw;
     }
 }
 
-@media(max-width: 800px){
-    main{
-     height: 50vh;   
+@media(max-width: 800px) {
+    main {
+        height: 50vh;
     }
 }
