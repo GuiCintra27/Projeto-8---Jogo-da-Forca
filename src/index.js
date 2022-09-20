@@ -1,41 +1,49 @@
 import ReactDOM from 'react-dom';
-import React from 'react';
+import React, { useState } from 'react';
+import words from './words';
 
-function KeyWords() {
-    const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-
+function KeyWords(props) {
     return (
-        <div id="keys">
-            {alphabet.map((item) =>
-                <div class="key disable">
-                    <p>{item}</p>
-                </div>
-            )}
+        <div class="key disable">
+            <p>{props.letter}</p>
         </div>
     )
 }
 
-function KeyWordsAble() {
-    const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+function KeyWordsAble(props) {
+    const [keySelected, setKeySelected] = useState(false);
 
-    const [keySelect, setKeySelect] = React.useState('key able');
-
-    function selected(){
-        setKeySelect('key disable');
+    function selected() {
+        setKeySelected(!keySelected);
     }
 
     return (
-        <div id="keys">
-            {alphabet.map((item) =>
-                <div class={keySelect} onClick={selected}>
-                    <p>{item}</p>
-                </div>
-            )}
+        <div class={keySelected ? 'key disable' : 'key able'}
+            onClick={selected}>
+            <p>{props.letter}</p>
         </div>
+    )
+}
+
+function SecretWord(){
+    const word = words[Math.floor(Math.random() * words.length)];
+    let x = [];
+    for (let i = 0; i < word.length; i++){
+        x.push(word[i])
+    }
+
+    return(
+        <div id="secretWord">
+            {x.map((item) => (
+                <p class='secret'></p>
+            ))}
+    </div>
     )
 }
 
 function App() {
+    const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+
     const [keyWords, setKeyWords] = React.useState(0);
 
     function startGame() {
@@ -52,13 +60,25 @@ function App() {
                     <div id="startGame">
                         <button onClick={startGame}>Escolher Palavra</button>
                     </div>
-                    <div id="secretWord">
-                        <p class="secret">a</p><p class="secret"></p><p class="secret"></p><p class="secret"></p><p class="secret"></p><p class="secret"></p><p class="secret"></p>
-                    </div>
+                    {(keyWords === 0) ? (
+                        <p></p>
+                    ) : (
+                        <SecretWord/>
+                    )}
                 </aside>
             </main>
 
-            {(keyWords === 0) ? <KeyWords/> : <KeyWordsAble/>}
+            <div id="keys">
+                {alphabet.map((item) => (
+                    (keyWords === 0) ? (
+                        <KeyWords letter={item} />
+                    ) : (
+                        <KeyWordsAble letter={item} />
+                    )
+                ))}
+            </div>
+
+
 
             <div id="guessWord">
                 <p>Já sei a palavra!</p>
