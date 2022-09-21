@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import React, { useState } from 'react';
-import words from './words';
+import wordDictionary from './words';
 import "./styles/index.css"
 import forca0 from './assets/forca0.png';
 import forca1 from './assets/forca1.png';
@@ -23,22 +23,39 @@ function KeyWordsDisable(props) {
 function App() {
     const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
-    const [keyWords, setKeyWords] = React.useState(0);
-    const [image, setImage] = React.useState(forca0);
+    const [keyWords, setKeyWords] = useState(false);
+    const [image, setImage] = useState(forca0);
+    const [anotherWord, setAnotherWord] = useState('');
+    const [wordDrawn, setWordDrawn] = useState([]);
+    const [start, setStart] = useState(false)
 
-    const word = words[Math.floor(Math.random() * words.length)];
+    let counter = 0, acertos = 0, indexes = [], selectedKeys = [];
 
-    let x = [], counter = 0, acertos = 0;
-    for (let i = 0; i < word.length; i++) {
-        x.push(word[i]);
-    }
 
     function startGame() {
-        setKeyWords(1);
+        setStart(!start)
+
+        if (!start) {
+            setKeyWords(!keyWords);
+            const word = wordDictionary[Math.floor(Math.random() * wordDictionary.length)];
+            const arrWord = [];
+            alert(word)
+            for (let i = 0; i < word.length; i++) {
+                arrWord.push(word[i]);
+            }
+            setWordDrawn(arrWord)
+        } else {
+            counter = 0;
+            acertos = 0;
+            indexes = [];
+            selectedKeys = [];
+            setKeyWords(!keyWords);
+        }
     }
 
     function compare(a, x) {
-        const test = x.filter((item) => {
+
+        const test = x.filter((item, index) => {
             const specialCaracter = ['a', 'e', 'i', 'o', 'u', 'c'];
             let letter = item;
             for (let variants of specialCaracter) {
@@ -84,10 +101,12 @@ function App() {
                 }
             }
 
-
-
             if (a !== letter) {
             } else {
+                let palavra = anotherWord + a;
+                setAnotherWord(palavra);
+                indexes.push(index);
+                console.log(anotherWord)
                 acertos++
                 return true
             }
@@ -138,8 +157,14 @@ function App() {
         const [keySelected, setKeySelected] = useState(false);
 
         function selected() {
-            setKeySelected(!keySelected);
-            compare(props.letter, props.secretWord);
+            let isUsed = (selectedKeys.filter((key) => { if (key === props.letter) { return true } }));
+            if (isUsed.length !== 0) {
+                alert('letra já usada');
+            } else {
+                selectedKeys.push(props.letter);
+                compare(props.letter, props.secretWord);
+                setKeySelected(!keySelected);
+            }
         }
 
         return (
@@ -153,8 +178,8 @@ function App() {
     function SecretWord() {
         return (
             <div id="secretWord">
-                {x.map((item, index) => (
-                    <p key={index} className='secret'>{item}</p>
+                {wordDrawn.map((item, index) => (
+                    <p key={index} className='secret'>{anotherWord[index]}</p>
                 ))}
             </div>
         )
@@ -168,9 +193,13 @@ function App() {
                 </div>
                 <aside>
                     <div id="startGame">
-                        <button onClick={startGame}>Escolher Palavra</button>
+                        <button onClick={startGame}>{start ? (
+                            'Novo Jogo'
+                            ) : (
+                                'Escolher Palavra'
+                            ) }</button>
                     </div>
-                    {(keyWords === 0) ? (
+                    {!keyWords ? (
                         <p></p>
                     ) : (
                         <SecretWord />
@@ -179,12 +208,12 @@ function App() {
             </main>
 
             <div id="keys">
-                {alphabet.map((item, index) => (
-                    (keyWords === 0) ? (
-                        <KeyWordsDisable key={index} letter={item} />
-                    ) : (
-                        <KeyWordsAble key={index} letter={item} secretWord={x} />
-                    )
+                {alphabet.map((item, index) =>
+                (!keyWords ? (
+                    <KeyWordsDisable key={index} letter={item} />
+                ) : (
+                    <KeyWordsAble key={index} letter={item} secretWord={wordDrawn} />
+                )
                 ))}
             </div>
 
