@@ -69,7 +69,7 @@ main {
     font-weight: 600;
 }
 
-.newGame{
+.newGame {
     background: var(--lose-game-word) !important;
 }
 
@@ -82,14 +82,14 @@ main {
     gap: 1rem;
 }
 
-#secretWord > p{
+#secretWord>p {
     font-size: 25px;
     font-weight: 600;
     text-transform: uppercase;
     margin-top: 0;
 }
 
-#secretWord > .secret{
+#secretWord>.secret {
     border-bottom: 4px solid black;
     height: 3rem;
     width: 3rem;
@@ -175,7 +175,7 @@ main {
         font-size: 35PX;
     }
 
-    #secretWord > .secret{
+    #secretWord>.secret {
         border-bottom: 4px solid black;
         height: 4rem;
         width: 5rem;
@@ -189,5 +189,60 @@ main {
 @media(max-width: 800px) {
     main {
         height: 50vh;
+    }
+}
+
+@media(max-width: 500px) {
+    main {
+        height: 30vh;
+    }
+
+    #startGame>button {
+        padding: .75rem;
+        padding-inline: 1rem;
+        font-size: 14px;
+    }
+
+    #secretWord {
+        gap: .5rem;
+    }
+
+    #secretWord>p {
+        font-size: 12px;
+    }
+
+    #secretWord>.secret {
+        border-bottom: 2px solid black;
+        height: 1rem;
+        width: 1rem;
+    }
+
+    .key {
+        width: 3rem;
+        height: 3rem;
+        font-size: 14px;
+    }
+
+    #guessWord {
+        max-width: 85vw;
+    }
+
+    #guessWord>p {
+        font-size: 12.5px;
+    }
+
+    #guessWord>input {
+        width: 100%;
+        min-width: 15rem;
+        height: 3rem;
+        padding-inline: 1rem;
+        font-size: 14px;
+        border-radius: 4px;
+    }
+
+    #guessWord>button {
+        padding: .6rem;
+        font-size: 14px;
+        border-radius: 4px;
     }
 }
