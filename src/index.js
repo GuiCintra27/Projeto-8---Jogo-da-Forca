@@ -41,7 +41,6 @@ function App() {
         if (!start) {
             const word = wordDictionary[Math.floor(Math.random() * wordDictionary.length)];
             const arrWord = [];
-            alert(word)
             for (let i = 0; i < word.length; i++) {
                 arrWord.push(word[i]);
             }
