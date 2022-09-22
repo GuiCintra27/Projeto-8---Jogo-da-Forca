@@ -174,7 +174,7 @@ function App() {
         }
 
         return (
-            <div className={keysSelected.includes(props.letter) ? 'key disable' : 'key able'}
+            <div data-identifier="letter" className={keysSelected.includes(props.letter) ? 'key disable' : 'key able'}
                 onClick={() => selected(props.letter)}>
                 <p>{props.letter}</p>
             </div>
@@ -183,7 +183,7 @@ function App() {
 
     function RenderWord() {
         return (
-            <div id="secretWord">
+            <div data-identifier="word" id="secretWord">
                 {wordDrawn.map((item, index) => (
                     <p key={index} className={visibleIndex.includes(index) ? '' : 'secret'} style={color} >
                         {visibleIndex.includes(index) ? item : ''}
@@ -197,11 +197,11 @@ function App() {
         <>
             <main>
                 <div id="force">
-                    <img src={image} alt="Forca imagem" />
+                    <img data-identifier="game-image" src={image} alt="Forca imagem" />
                 </div>
                 <aside>
                     <div id="startGame">
-                        <button onClick={startGame} className={start ? 'NewGame' : ''}>
+                        <button data-identifier="choose-word" onClick={startGame} className={start ? 'NewGame' : ''}>
                             {start ? 'Novo Jogo' : 'Escolher Palavra'}
                         </button>
                     </div>
@@ -225,8 +225,8 @@ function App() {
 
             <div id="guessWord">
                 <p>Já sei a palavra!</p>
-                <input type="text" />
-                <button>Chutar</button>
+                <input data-identifier="type-guess" type="text"/>
+                <button data-identifier="guess-button">Chutar</button>
             </div>
         </>
     )
