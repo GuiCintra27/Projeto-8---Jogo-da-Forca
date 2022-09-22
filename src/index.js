@@ -31,6 +31,7 @@ function App() {
     const [keysSelected, setKeysSelected] = useState([]);
     const [life, setLife] = useState(6);
     const [color, setColor] = useState({ color: 'black' });
+    const [disabled, setDisabled] = useState(true);
 
 
     function startGame() {
@@ -49,13 +50,15 @@ function App() {
             setVisibleIndex([]);
             setKeysSelected([]);
             setImage(forca0);
-            setColor({ color: 'black' })
+            setColor({ color: 'black' });
+            setDisabled(false);
         } else {
             setLife(6);
             setSuccesses(0);
             setVisibleIndex([]);
             setKeysSelected([]);
             setImage(forca0);
+            setDisabled(true);
         }
     }
 
@@ -121,6 +124,7 @@ function App() {
         if (success === x.length) {
             setColor({ color: 'var(--button-start-game)' });
             setKeysSelected([...alphabet]);
+            setDisabled(true);
         } else if (test.length === 0 || test === null) {
 
             switch (life) {
@@ -154,6 +158,7 @@ function App() {
                     setColor({ color: 'var(--lose-game-word)' });
                     setLife(life - 1);
                     setKeysSelected([...alphabet]);
+                    setDisabled(true);
                     x.map((item, index) => indexes.push(index));
                     break;
 
@@ -225,7 +230,7 @@ function App() {
 
             <div id="guessWord">
                 <p>Já sei a palavra!</p>
-                <input data-identifier="type-guess" type="text"/>
+                <input data-identifier="type-guess" disabled={disabled ? 'disabled' : ''} className={disabled ? 'inputDisabled' : ''} type="text"/>
                 <button data-identifier="guess-button">Chutar</button>
             </div>
         </>

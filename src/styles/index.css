@@ -152,6 +152,11 @@ main {
     font-size: 17px;
 }
 
+.inputDisabled{
+    border-color: 2px solid (var(--able-keys-key));
+    background-color: var(--disable-keys-bg) !important;
+}
+
 #guessWord>button {
     padding: .8rem;
     background: var(--able-keys-bg);
