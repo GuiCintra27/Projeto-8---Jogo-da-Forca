@@ -30,6 +30,7 @@ function App() {
     const [successes, setSuccesses] = useState(0);
     const [keysSelected, setKeysSelected] = useState([]);
     const [life, setLife] = useState(6);
+    const [color, setColor] = useState({ color: 'black' });
 
 
     function startGame() {
@@ -43,16 +44,22 @@ function App() {
                 arrWord.push(word[i]);
             }
             setWordDrawn([...arrWord]);
+            setLife(6);
+            setSuccesses(0);
+            setVisibleIndex([]);
+            setKeysSelected([]);
+            setImage(forca0);
+            setColor({ color: 'black' })
         } else {
             setLife(6);
             setSuccesses(0);
             setVisibleIndex([]);
             setKeysSelected([]);
+            setImage(forca0);
         }
     }
 
     function compare(a, x) {
-
         const indexes = [];
         let success = successes;
 
@@ -112,40 +119,42 @@ function App() {
         })
 
         if (success === x.length) {
-            alert('ganhou');
-            startGame();
+            setColor({ color: 'var(--button-start-game)' });
+            setKeysSelected([...alphabet]);
         } else if (test.length === 0 || test === null) {
 
             switch (life) {
                 case 6:
-                    alert(`vida: ${life - 1}`)
+                    setImage(forca1);
                     setLife(life - 1);
                     break;
 
                 case 5:
-                    alert(`vida: ${life - 1}`)
+                    setImage(forca2);
                     setLife(life - 1);
                     break;
 
                 case 4:
-                    alert(`vida: ${life - 1}`)
+                    setImage(forca3);
                     setLife(life - 1);
                     break;
 
                 case 3:
-                    alert(`vida: ${life - 1}`)
+                    setImage(forca4);
                     setLife(life - 1);
                     break;
 
                 case 2:
-                    alert(`vida: ${life - 1}`)
+                    setImage(forca5);
                     setLife(life - 1);
                     break;
 
                 case 1:
+                    setImage(forca6);
+                    setColor({ color: 'var(--lose-game-word)' });
                     setLife(life - 1);
+                    setKeysSelected([...alphabet]);
                     x.map((item, index) => indexes.push(index));
-                    alert('você perdeu');
                     break;
 
                 default:
@@ -158,12 +167,10 @@ function App() {
     function KeyWordsAble(props) {
 
         function selected(letter) {
-            if (keysSelected.includes(letter)) {
-                alert('Esta letra já foi inserida!');
-            } else {
+            if (!keysSelected.includes(letter)) {
                 setKeysSelected([...keysSelected, letter]);
                 compare(props.letter, props.secretWord);
-            }
+            } 
         }
 
         return (
@@ -178,7 +185,7 @@ function App() {
         return (
             <div id="secretWord">
                 {wordDrawn.map((item, index) => (
-                    <p key={index} className={visibleIndex.includes(index) ? '' : 'secret'}>
+                    <p key={index} className={visibleIndex.includes(index) ? '' : 'secret'} style={color} >
                         {visibleIndex.includes(index) ? item : ''}
                     </p>
                 ))}
