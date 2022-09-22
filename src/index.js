@@ -32,6 +32,7 @@ function App() {
     const [life, setLife] = useState(6);
     const [color, setColor] = useState({ color: 'black' });
     const [disabled, setDisabled] = useState(true);
+    const [guessWord, setGuessWord] = useState();
 
 
     function startGame() {
@@ -175,7 +176,7 @@ function App() {
             if (!keysSelected.includes(letter)) {
                 setKeysSelected([...keysSelected, letter]);
                 compare(props.letter, props.secretWord);
-            } 
+            }
         }
 
         return (
@@ -196,6 +197,30 @@ function App() {
                 ))}
             </div>
         )
+    }
+
+    function tryWord() {
+        let word = '';
+        const indexes = [];
+
+        wordDrawn.map((item, index) => {
+            word += item;
+            indexes.push(index);
+        })
+
+        if (guessWord === word) {
+            setColor({ color: 'var(--button-start-game)' });
+            setKeysSelected([...alphabet]);
+            setDisabled(true);
+            setVisibleIndex([...visibleIndex, ...indexes]);            
+        } else {
+            setImage(forca6);
+            setVisibleIndex([...visibleIndex, ...indexes]);      
+            setColor({ color: 'var(--lose-game-word)' });
+            setLife(0);
+            setKeysSelected([...alphabet]);
+            setDisabled(true);
+        }
     }
 
     return (
@@ -230,8 +255,8 @@ function App() {
 
             <div id="guessWord">
                 <p>Já sei a palavra!</p>
-                <input data-identifier="type-guess" disabled={disabled ? 'disabled' : ''} className={disabled ? 'inputDisabled' : ''} type="text"/>
-                <button data-identifier="guess-button">Chutar</button>
+                <input data-identifier="type-guess" disabled={disabled ? 'disabled' : ''} className={disabled ? 'inputDisabled' : ''} type="text" onChange={(e) => setGuessWord(e.target.value)} />
+                <button data-identifier="guess-button" onClick={tryWord}>Chutar</button>
             </div>
         </>
     )
