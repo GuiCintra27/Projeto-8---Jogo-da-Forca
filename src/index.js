@@ -23,21 +23,19 @@ function KeyWordsDisable(props) {
 function App() {
     const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
-    const [keyWords, setKeyWords] = useState(false);
     const [image, setImage] = useState(forca0);
     const [wordDrawn, setWordDrawn] = useState([]);
     const [start, setStart] = useState(false);
-    const [ visibleIndex, setVisibleIndex] = useState([]);
+    const [visibleIndex, setVisibleIndex] = useState([]);
     const [successes, setSuccesses] = useState(0);
-
-    let counter = 0, selectedKeys = [];
+    const [keysSelected, setKeysSelected] = useState([]);
+    const [life, setLife] = useState(6);
 
 
     function startGame() {
         setStart(!start)
 
         if (!start) {
-            setKeyWords(!keyWords);
             const word = wordDictionary[Math.floor(Math.random() * wordDictionary.length)];
             const arrWord = [];
             alert(word)
@@ -46,11 +44,10 @@ function App() {
             }
             setWordDrawn([...arrWord]);
         } else {
-            counter = 0;
+            setLife(6);
             setSuccesses(0);
             setVisibleIndex([]);
-            selectedKeys = [];
-            setKeyWords(!keyWords);
+            setKeysSelected([]);
         }
     }
 
@@ -58,7 +55,7 @@ function App() {
 
         const indexes = [];
         let success = successes;
-        
+
         const test = x.filter((item, index) => {
             const specialCaracter = ['a', 'e', 'i', 'o', 'u', 'c'];
             let letter = item;
@@ -116,38 +113,39 @@ function App() {
 
         if (success === x.length) {
             alert('ganhou');
-            setStart(!start);
+            startGame();
         } else if (test.length === 0 || test === null) {
 
-            switch (counter) {
-                case 0:
-                    alert(`erros: ${counter + 1}`)
-                    counter++
-                    break;
-
-                case 1:
-                    alert(`erros: ${counter + 1}`)
-                    counter++
-                    break;
-
-                case 2:
-                    alert(`erros: ${counter + 1}`)
-                    counter++
-                    break;
-
-                case 3:
-                    alert(`erros: ${counter + 1}`)
-                    counter++
-                    break;
-
-                case 4:
-                    alert(`erros: ${counter + 1}`)
-                    counter++
+            switch (life) {
+                case 6:
+                    alert(`vida: ${life - 1}`)
+                    setLife(life - 1);
                     break;
 
                 case 5:
-                    alert('você perdeu')
-                    counter++
+                    alert(`vida: ${life - 1}`)
+                    setLife(life - 1);
+                    break;
+
+                case 4:
+                    alert(`vida: ${life - 1}`)
+                    setLife(life - 1);
+                    break;
+
+                case 3:
+                    alert(`vida: ${life - 1}`)
+                    setLife(life - 1);
+                    break;
+
+                case 2:
+                    alert(`vida: ${life - 1}`)
+                    setLife(life - 1);
+                    break;
+
+                case 1:
+                    setLife(life - 1);
+                    x.map((item, index) => indexes.push(index));
+                    alert('você perdeu');
                     break;
 
                 default:
@@ -158,22 +156,19 @@ function App() {
     }
 
     function KeyWordsAble(props) {
-        const [keySelected, setKeySelected] = useState(false);
 
-        function selected() {
-            let isUsed = (selectedKeys.filter((key) => { if (key === props.letter) { return true } }));
-            if (isUsed.length !== 0) {
-                alert('letra já usada');
+        function selected(letter) {
+            if (keysSelected.includes(letter)) {
+                alert('Esta letra já foi inserida!');
             } else {
-                selectedKeys.push(props.letter);
-                setKeySelected(!keySelected);
+                setKeysSelected([...keysSelected, letter]);
                 compare(props.letter, props.secretWord);
             }
         }
 
         return (
-            <div className={keySelected ? 'key disable' : 'key able'}
-                onClick={selected}>
+            <div className={keysSelected.includes(props.letter) ? 'key disable' : 'key able'}
+                onClick={() => selected(props.letter)}>
                 <p>{props.letter}</p>
             </div>
         )
@@ -184,11 +179,8 @@ function App() {
             <div id="secretWord">
                 {wordDrawn.map((item, index) => (
                     <p key={index} className={visibleIndex.includes(index) ? '' : 'secret'}>
-                        {visibleIndex.includes(index) ? (
-                        item
-                    ) : (
-                        ''
-                    )}</p>
+                        {visibleIndex.includes(index) ? item : ''}
+                    </p>
                 ))}
             </div>
         )
@@ -203,11 +195,8 @@ function App() {
                 <aside>
                     <div id="startGame">
                         <button onClick={startGame} className={start ? 'NewGame' : ''}>
-                            {start ? (
-                            'Novo Jogo'
-                            ) : (
-                                'Escolher Palavra'
-                            ) }</button>
+                            {start ? 'Novo Jogo' : 'Escolher Palavra'}
+                        </button>
                     </div>
                     {start ? (
                         <RenderWord />
@@ -226,8 +215,6 @@ function App() {
                 )
                 ))}
             </div>
-
-
 
             <div id="guessWord">
                 <p>Já sei a palavra!</p>
