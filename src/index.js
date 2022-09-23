@@ -10,19 +10,9 @@ import forca4 from './assets/forca4.png';
 import forca5 from './assets/forca5.png';
 import forca6 from './assets/forca6.png';
 
-function KeyWordsDisable(props) {
-    return (
-        <div className="key disable">
-            <p>{props.letter}</p>
-        </div>
-    )
-}
-
-
-
 function App() {
     const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-
+    const images = [forca6, forca5, forca4, forca3, forca2, forca1, forca0];
     const [image, setImage] = useState(forca0);
     const [wordDrawn, setWordDrawn] = useState([]);
     const [start, setStart] = useState(false);
@@ -37,36 +27,33 @@ function App() {
 
     function startGame() {
         setStart(!start)
+        setLife(6);
+        setSuccesses(0);
+        setVisibleIndex([]);
+        setKeysSelected([]);
+        setImage(forca0);
+        setColor({ color: 'black' });
 
         if (!start) {
             const word = wordDictionary[Math.floor(Math.random() * wordDictionary.length)];
             const arrWord = [];
+
             for (let i = 0; i < word.length; i++) {
                 arrWord.push(word[i]);
             }
+
             setWordDrawn([...arrWord]);
-            setLife(6);
-            setSuccesses(0);
-            setVisibleIndex([]);
-            setKeysSelected([]);
-            setImage(forca0);
-            setColor({ color: 'black' });
             setDisabled(false);
         } else {
-            setLife(6);
-            setSuccesses(0);
-            setVisibleIndex([]);
-            setKeysSelected([]);
-            setImage(forca0);
             setDisabled(true);
         }
     }
 
-    function compare(a, x) {
+    function compare(selectedLetter, secretWord) {
         const indexes = [];
-        let success = successes;
+        let success = successes, lifes = life;
 
-        const test = x.filter((item, index) => {
+        const test = secretWord.filter((item, index) => {
             const specialCaracter = ['a', 'e', 'i', 'o', 'u', 'c'];
             let letter = item;
             for (let variants of specialCaracter) {
@@ -112,8 +99,7 @@ function App() {
                 }
             }
 
-            if (a !== letter) {
-            } else {
+            if (selectedLetter === letter) {
                 indexes.push(index);
                 setSuccesses(success + 1);
                 success++
@@ -121,52 +107,18 @@ function App() {
             }
         })
 
-        if (success === x.length) {
-            setColor({ color: 'var(--button-start-game)' });
-            setKeysSelected([...alphabet]);
-            setDisabled(true);
+        if (success === secretWord.length) {
+            finishGame('win');
         } else if (test.length === 0 || test === null) {
-
-            switch (life) {
-                case 6:
-                    setImage(forca1);
-                    setLife(life - 1);
-                    break;
-
-                case 5:
-                    setImage(forca2);
-                    setLife(life - 1);
-                    break;
-
-                case 4:
-                    setImage(forca3);
-                    setLife(life - 1);
-                    break;
-
-                case 3:
-                    setImage(forca4);
-                    setLife(life - 1);
-                    break;
-
-                case 2:
-                    setImage(forca5);
-                    setLife(life - 1);
-                    break;
-
-                case 1:
-                    setImage(forca6);
-                    setColor({ color: 'var(--lose-game-word)' });
-                    setLife(life - 1);
-                    setKeysSelected([...alphabet]);
-                    setDisabled(true);
-                    x.map((item, index) => indexes.push(index));
-                    break;
-
-                default:
-                    break;
-            }
+            setLife(life - 1);
+            setImage(images[life - 1]);
         }
-        setVisibleIndex([...visibleIndex, ...indexes]);
+
+        if (lifes - 1 === 0) {
+            finishGame('lose');
+        } else {
+            setVisibleIndex([...visibleIndex, ...indexes]);
+        }
     }
 
     function KeyWordsAble(props) {
@@ -186,6 +138,14 @@ function App() {
         )
     }
 
+    function KeyWordsDisable(props) {
+        return (
+            <div className="key disable">
+                <p>{props.letter}</p>
+            </div>
+        )
+    }
+
     function RenderWord() {
         return (
             <div data-identifier="word" id="secretWord">
@@ -200,25 +160,33 @@ function App() {
 
     function tryWord() {
         let word = '';
+        wordDrawn.map((item, index) => word += item)
+
+        if (guessWord === word) {
+            finishGame('win');
+        } else {
+
+            finishGame('lose');
+        }
+    }
+
+    function finishGame(result) {
         const indexes = [];
 
         wordDrawn.map((item, index) => {
-            word += item;
             indexes.push(index);
-        })
+        });
 
-        if (guessWord === word) {
+        setKeysSelected([...alphabet]);
+        setDisabled(true);
+        setVisibleIndex([...visibleIndex, ...indexes]);
+        setLife(0);
+
+        if (result === 'win') {
             setColor({ color: 'var(--button-start-game)' });
-            setKeysSelected([...alphabet]);
-            setDisabled(true);
-            setVisibleIndex([...visibleIndex, ...indexes]);            
         } else {
             setImage(forca6);
-            setVisibleIndex([...visibleIndex, ...indexes]);      
             setColor({ color: 'var(--lose-game-word)' });
-            setLife(0);
-            setKeysSelected([...alphabet]);
-            setDisabled(true);
         }
     }
 
@@ -234,11 +202,7 @@ function App() {
                             {start ? 'Novo Jogo' : 'Escolher Palavra'}
                         </button>
                     </div>
-                    {start ? (
-                        <RenderWord />
-                    ) : (
-                        <p></p>
-                    )}
+                    {start ? <RenderWord /> : <p></p>}
                 </aside>
             </main>
 
