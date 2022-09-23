@@ -42,6 +42,8 @@ function App() {
                 arrWord.push(word[i]);
             }
 
+            alert(word)
+
             setWordDrawn([...arrWord]);
             setDisabled(false);
         } else {
@@ -50,62 +52,23 @@ function App() {
     }
 
     function compare(selectedLetter, secretWord) {
+
         const indexes = [];
-        let success = successes, lifes = life;
+        let x = '';
 
-        const test = secretWord.filter((item, index) => {
-            const specialCaracter = ['a', 'e', 'i', 'o', 'u', 'c'];
-            let letter = item;
-            for (let variants of specialCaracter) {
-                switch (variants) {
-                    case 'a':
-                        if (item === 'á' || item === 'ã' || item === 'â') {
-                            letter = variants;
-                        }
-                        break;
+        wordDrawn.map((item) => x+= item);
+        x = x.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
-                    case 'e':
-                        if (item === 'é' || item === 'ẽ' || item === 'ê') {
-                            letter = variants;
-                        }
-                        break;
-
-                    case 'i':
-                        if (item === 'í' || item === 'ĩ' || item === 'î') {
-                            letter = variants;
-                        }
-                        break;
-
-                    case 'o':
-                        if (item === 'ó' || item === 'ô' || item === 'ô') {
-                            letter = variants;
-                        }
-                        break;
-
-                    case 'u':
-                        if (item === 'ú' || item === 'ũ' || item === 'û') {
-                            letter = variants;
-                        }
-                        break;
-
-                    case 'c':
-                        if (item === 'ç') {
-                            letter = variants;
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-            if (selectedLetter === letter) {
-                indexes.push(index);
+        let success = successes, lifes = life, test = [];
+        
+        for (let i = 0; i < x.length; i++){
+            if (selectedLetter === x[i]) {
+                indexes.push(i);
+                test.push(i);
                 setSuccesses(success + 1);
                 success++
-                return true
             }
-        })
+        }
 
         if (success === secretWord.length) {
             finishGame('win');
