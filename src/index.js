@@ -23,7 +23,10 @@ function App() {
     const [color, setColor] = useState({ color: 'black' });
     const [disabled, setDisabled] = useState(true);
     const [guessWord, setGuessWord] = useState();
+    let wordNormalized = '';
 
+    wordDrawn.map((item) => wordNormalized+= item);
+    wordNormalized = wordNormalized.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
     function startGame() {
         setStart(!start)
@@ -36,13 +39,7 @@ function App() {
 
         if (!start) {
             const word = wordDictionary[Math.floor(Math.random() * wordDictionary.length)];
-            const arrWord = [];
-
-            for (let i = 0; i < word.length; i++) {
-                arrWord.push(word[i]);
-            }
-
-            alert(word)
+            const arrWord = word.split('');
 
             setWordDrawn([...arrWord]);
             setDisabled(false);
@@ -52,19 +49,12 @@ function App() {
     }
 
     function compare(selectedLetter, secretWord) {
-
         const indexes = [];
-        let x = '';
-
-        wordDrawn.map((item) => x+= item);
-        x = x.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-
-        let success = successes, lifes = life, test = [];
+        let success = successes, lifes = life;
         
-        for (let i = 0; i < x.length; i++){
-            if (selectedLetter === x[i]) {
+        for (let i = 0; i < wordNormalized.length; i++){
+            if (selectedLetter === wordNormalized[i]) {
                 indexes.push(i);
-                test.push(i);
                 setSuccesses(success + 1);
                 success++
             }
@@ -72,7 +62,7 @@ function App() {
 
         if (success === secretWord.length) {
             finishGame('win');
-        } else if (test.length === 0 || test === null) {
+        } else if (indexes.length === 0 || indexes === null) {
             setLife(life - 1);
             setImage(images[life - 1]);
         }
@@ -123,12 +113,11 @@ function App() {
 
     function tryWord() {
         let word = '';
-        wordDrawn.map((item, index) => word += item)
+        wordDrawn.map((letter) => word+= letter);
 
-        if (guessWord === word) {
+        if (guessWord === wordNormalized || guessWord === word) {
             finishGame('win');
         } else {
-
             finishGame('lose');
         }
     }
@@ -140,6 +129,7 @@ function App() {
             indexes.push(index);
         });
 
+        setGuessWord('');
         setKeysSelected([...alphabet]);
         setDisabled(true);
         setVisibleIndex([...visibleIndex, ...indexes]);
@@ -181,8 +171,8 @@ function App() {
 
             <div id="guessWord">
                 <p>Já sei a palavra!</p>
-                <input data-identifier="type-guess" disabled={disabled ? 'disabled' : ''} className={disabled ? 'inputDisabled' : ''} type="text" onChange={(e) => setGuessWord(e.target.value)} />
-                <button data-identifier="guess-button" onClick={tryWord}>Chutar</button>
+                <input data-identifier="type-guess" disabled={disabled ? 'disabled' : ''} className={disabled ? 'inputDisabled' : ''} type="text" onChange={(e) => setGuessWord(e.target.value)} value= {guessWord} />
+                <button disabled={disabled ? 'disabled' : ''} data-identifier="guess-button" onClick={tryWord}>Chutar</button>
             </div>
         </>
     )
